@@ -1,0 +1,22 @@
+this is a report describing the results obtained from jacoco analysis.
+
+Note: I'll be ignoring the main class, as it appears to only be a setup for an example.
+
+Before:
+    tqs.euromillions: 
+        coverage: 80%
+        points to improve:
+            test format()
+            test countDips() for correct output
+            test if changing a value in the dip changes the hash code
+            test if equals can detect dip difference (even if the changes are minor)
+            improve testConstructorFromBadArrays to cover branches where the arrays are too big
+    tqs.sets:
+        complete disabled tests
+        test if creating fromArray is the same as creating then adding
+        test if returns error from exceeding bounds
+        test if slightly different arrays produce different hashes
+        test difference between sets
+        test initial size and size after operations (add,...)
+
+
