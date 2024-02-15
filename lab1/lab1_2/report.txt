@@ -3,8 +3,8 @@ this is a report describing the results obtained from jacoco analysis.
 Note: I'll be ignoring the main class, as it appears to only be a setup for an example.
 
 Before:
+    coverage: 80%
     tqs.euromillions: 
-        coverage: 80%
         points to improve:
             test format()
             test countDips() for correct output
@@ -13,10 +13,11 @@ Before:
             improve testConstructorFromBadArrays to cover branches where the arrays are too big
     tqs.sets:
         complete disabled tests
-        test if creating fromArray is the same as creating then adding
         test if returns error from exceeding bounds
-        test if slightly different arrays produce different hashes
         test difference between sets
-        test initial size and size after operations (add,...)
+        complete and test intersect
 
-
+After:
+    instruction coverage: 88%
+    branch coverage: 85%
+    I do not improve anymore, as the missed ones are mainly from the main "demo" function and because it sometimes fails to identify tested branches on equals 

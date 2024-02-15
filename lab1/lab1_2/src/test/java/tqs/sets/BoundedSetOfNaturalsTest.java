@@ -20,7 +20,7 @@ class BoundedSetOfNaturalsTest {
 
     @BeforeEach
     public void setUp() {
-        setA = new BoundedSetOfNaturals(1);
+        setA = new BoundedSetOfNaturals(2);
         setB = BoundedSetOfNaturals.fromArray(new int[]{10, 20, 30, 40, 50, 60});
         setC = BoundedSetOfNaturals.fromArray(new int[]{50, 60});
     }
@@ -30,7 +30,6 @@ class BoundedSetOfNaturalsTest {
         setA = setB = setC = null;
     }
 
-    @Disabled("TODO revise test logic")
     @Test
     public void testAddElement() {
 
@@ -38,18 +37,52 @@ class BoundedSetOfNaturalsTest {
         assertTrue(setA.contains(99), "add: added element not found in set.");
         assertEquals(1, setA.size());
 
-        setB.add(11);
-        assertTrue(setB.contains(11), "add: added element not found in set.");
-        assertEquals(7, setB.size(), "add: elements count not as expected.");
-    }
+        assertThrows(IllegalArgumentException.class,
+                () -> setB.add(11));
+                
+        // non-natural
+        assertThrows(IllegalArgumentException.class,
+                () -> setA.add(-99));
 
-    @Disabled("TODO revise to test the construction from invalid arrays")
+        // repeated
+        assertThrows(IllegalArgumentException.class,
+                () -> setA.add(99));
+    }
+  
     @Test
     public void testAddFromBadArray() {
-        int[] elems = new int[]{10, -20, -30};
+        int[] elems1 = new int[]{10, 20,30};
+        int[] elems2 = new int[]{-10,-20};
+        int[] elems3 = new int[]{10,10};
 
-        // must fail with exception
-        assertThrows(IllegalArgumentException.class, () -> setA.add(elems));
+
+        // array too big
+        assertThrows(IllegalArgumentException.class, () -> setA.add(elems1));
+
+        //array has non-natural numbers
+        assertThrows(IllegalArgumentException.class, () -> setA.add(elems2));
+
+        //array has repeated values
+        assertThrows(IllegalArgumentException.class, ()-> setA.add(elems3));
+    }
+
+    @Test
+    public void testDifference(){
+        assertNotEquals(setB,BoundedSetOfNaturals.fromArray(new int[]{10, 20, 30, 40, 50, 70}));
+        BoundedSetOfNaturals setC2=new BoundedSetOfNaturals(2);
+        setC2.add(50);
+        setC2.add(60);
+        assertEquals(setC, setC2);
+    }
+
+    @Test
+    public void testIntersect(){
+        setA.add(new int[]{70,80});
+        assertTrue(setB.intersects(setC));
+        assertTrue(setC.intersects(setB));
+        
+        assertFalse(setA.intersects(setB));
+        assertFalse(setB.intersects(setA));
     }
 
 
