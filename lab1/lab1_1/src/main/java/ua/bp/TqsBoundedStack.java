@@ -9,5 +9,10 @@ public class TqsBoundedStack<T> extends TqsStack<T> {
     }
 
     @Override
-    public void push(T item) throws IllegalStateException{}
+    public void push(T item) throws IllegalStateException{
+        if(list.size()>=limit){
+            throw new IllegalStateException("size must not be greater than "+limit);
+        }
+        super.push(item);
+    }
 }
