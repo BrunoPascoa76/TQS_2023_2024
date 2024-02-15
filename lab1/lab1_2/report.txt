@@ -8,8 +8,6 @@ Before:
         points to improve:
             test format()
             test countDips() for correct output
-            test if changing a value in the dip changes the hash code
-            test if equals can detect dip difference (even if the changes are minor)
             improve testConstructorFromBadArrays to cover branches where the arrays are too big
     tqs.sets:
         complete disabled tests
