@@ -18,8 +18,13 @@ public class TqsStackTest{
     private TqsStack<Integer> stack;
 
     @BeforeEach
-    void initialize(){
+    void setup(){
         stack=new TqsStack<>();
+    }
+
+    @AfterEach
+    void teardown(){
+        stack=null;
     }
     
     @Test
