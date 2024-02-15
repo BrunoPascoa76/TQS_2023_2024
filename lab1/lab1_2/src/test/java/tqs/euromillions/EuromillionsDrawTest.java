@@ -38,5 +38,17 @@ public class EuromillionsDrawTest {
         // compare empty with the matches found
         assertEquals( new Dip(), matchesFound);
     }
+    
+    @Test
+    public void testFormat(){
+        Dip exampleDip=sampleCoupon.getDipByIndex(2);
+        CuponEuromillions deterministicCupon= new CuponEuromillions();
+        deterministicCupon.appendDip(exampleDip);
+        assertEquals("Dip #1:N[  1  2  3 48 49] S[  1  9]\n", deterministicCupon.format());
+    }
 
+    @Test
+    public void testCountDips(){
+        assertEquals(3, sampleCoupon.countDips());
+    }
 }

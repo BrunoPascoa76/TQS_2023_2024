@@ -46,9 +46,9 @@ public class DipTest {
         assertThrows(IllegalArgumentException.class,
                 () -> new Dip( new int[]{10, 11, 12, 13, -1}, new int[]{1, 2} ) );
 
-        // this test will reveal that the code was not yet checking ranges
-
-
+        // too many args
+        assertThrows(IllegalArgumentException.class,
+                () -> new Dip( new int[]{10, 11, 12, 13, 15, 16}, new int[]{1, 2} ));
     }
 
     @DisplayName("new Dip rejects out of range elements")
@@ -63,6 +63,32 @@ public class DipTest {
 
     }
 
+    @Test
+    void testHashChange(){
+        Dip sampleInstance2 = new Dip(new int[]{10, 20, 30, 40, 50}, new int[]{1, 2});
+        assertEquals(sampleInstance.hashCode(), sampleInstance2.hashCode());
 
+        sampleInstance2 = new Dip(new int[]{10, 20, 30, 40, 49}, new int[]{1, 2});
+        assertNotEquals(sampleInstance.hashCode(), sampleInstance2.hashCode());
+
+        sampleInstance2 = new Dip(new int[]{10, 20, 30, 40, 50}, new int[]{1, 3});
+        assertNotEquals(sampleInstance.hashCode(), sampleInstance2.hashCode());
+    }
+
+    @Test
+    void testEqual(){
+        Dip sampleInstance2 = new Dip(new int[]{10, 20, 30, 40, 50}, new int[]{1, 2});
+        assertTrue(sampleInstance.equals(sampleInstance2));
+
+        sampleInstance2 = new Dip(new int[]{10, 20, 30, 40, 49}, new int[]{1, 2});
+        assertFalse(sampleInstance.equals(sampleInstance2));
+
+        sampleInstance2 = new Dip(new int[]{10, 20, 30, 40, 50}, new int[]{1, 3});
+        assertFalse(sampleInstance.equals(sampleInstance2));
+
+        assertFalse(sampleInstance.equals(1));
+
+        assertFalse(sampleInstance.equals(null));
+    }
 
 }
