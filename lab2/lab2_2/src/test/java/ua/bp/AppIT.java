@@ -7,26 +7,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
-public class AppTest {
-    @Mock
+public class AppIT {
     public ISimpleHttpClient client;
 
-    @InjectMocks
     public AddressResolverService service;
 
     @BeforeEach
     public void init() {
+        client=new TQSBasicHttpClient();
         service = new AddressResolverService(client);
     }
 
@@ -39,24 +34,6 @@ public class AppTest {
 
     @Test
     public void TestCorrectResponse() {
-        //this is just trying to create a json to compare to, it looks complicated due to all the nesting on the response
-        JSONObject info = new JSONObject();
-        info.put("statuscode", 0);
-        JSONObject locations = new JSONObject();
-        locations.put("street", "802 Arkenstone Dr");
-        locations.put("adminArea5", "Jacksonville");
-        locations.put("postalCode", "32225");
-
-        JSONArray results=new JSONArray();
-        results.put(new JSONObject("{\"locations\": ["+locations+"]}"));
-
-        JSONObject expected=new JSONObject();
-        expected.put("info",info);
-        expected.put("results",results);
-
-        Mockito.when(client.doHttpGet(
-                "https://www.mapquestapi.com/geocoding/v1/reverse?key=fjpDDX0NAqWObtm30nW1w2njohV84QWs&location=30.33356,-81.47019&outFormat=json"))
-                .thenReturn(expected.toString());
         Optional<Address> response = service.findAddressForLocation(30.33356, -81.47019);
 
         assertAll(
@@ -70,15 +47,6 @@ public class AppTest {
 
     @Test
     public void TestWrongCoordinates() {
-        JSONObject info = new JSONObject();
-        info.put("statuscode", 400);
-
-        JSONObject expected = new JSONObject();
-        expected.put("info", info);
-
-        Mockito.when(client.doHttpGet(
-                "https://www.mapquestapi.com/geocoding/v1/reverse?key=fjpDDX0NAqWObtm30nW1w2njohV84QWs&location=300.33356,-81.47019&outFormat=json"))
-                .thenReturn(expected.toString());
         Optional<Address> response = service.findAddressForLocation(300.33356, -81.47019);
 
         assertFalse(response.isPresent());
