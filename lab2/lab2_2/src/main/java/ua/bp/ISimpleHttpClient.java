@@ -1,5 +1,5 @@
 package ua.bp;
 
 public interface ISimpleHttpClient {
-    public String doHttpGet(String uri);
+    public APOD doHttpGet(String uri);
 }
