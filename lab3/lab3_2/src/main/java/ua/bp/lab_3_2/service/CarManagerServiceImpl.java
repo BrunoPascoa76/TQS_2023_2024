@@ -15,8 +15,7 @@ public class CarManagerServiceImpl implements CarManagerService {
     private CarRepository repo;
 
     public Car save(Car car){
-        repo.save(car);
-        return car;
+        return repo.save(car);
     }
 
     public List<Car> getAllCars(){
