@@ -1,5 +1,7 @@
 package ua.bp.lab_3_2.data;
 
+import io.micrometer.common.lang.NonNull;
+import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +20,9 @@ public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long carId;
+    @NonNull
     private String maker;
+    @NonNull
     private String model;
 
     public Car(String maker, String model) {
