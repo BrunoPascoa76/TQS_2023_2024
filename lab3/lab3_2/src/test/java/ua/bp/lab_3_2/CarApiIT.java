@@ -23,13 +23,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.TestPropertySource;
 
 import ua.bp.lab_3_2.data.Car;
 import ua.bp.lab_3_2.data.CarRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@AutoConfigureTestDatabase
-public class CarApiIT {
+@TestPropertySource(locations = "classpath:it.properties")
+class CarApiIT {
     @LocalServerPort
     int port;
 
@@ -75,19 +76,21 @@ public class CarApiIT {
     }
 
     @Test
-    void given3Cars_whenFindAll_thenReturnAll200(){
+    void given3Cars_whenFindAll_thenReturnAll200() {
         Car car1 = new Car("BMW", "Corolla");
         Car car2 = new Car("Nissan", "Ariya");
         Car car3 = new Car("Peugeot", "2008");
 
-        car1=repo.save(car1);
-        car2=repo.save(car2);
-        car3=repo.save(car3);
+        car1 = repo.save(car1);
+        car2 = repo.save(car2);
+        car3 = repo.save(car3);
         repo.flush();
 
-        ResponseEntity<List<Car>> response=restTemplate.exchange("/api/cars", HttpMethod.GET, null, new ParameterizedTypeReference<List<Car>>(){});
+        ResponseEntity<List<Car>> response = restTemplate.exchange("/api/cars", HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Car>>() {
+                });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertThat(response.getBody()).hasSize(3).containsOnly(car1,car2,car3);
+        assertThat(response.getBody()).hasSize(3).containsOnly(car1, car2, car3);
     }
 }
