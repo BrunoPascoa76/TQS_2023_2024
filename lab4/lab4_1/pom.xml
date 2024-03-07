@@ -13,9 +13,10 @@
   <url>http://www.example.com</url>
 
   <properties>
+    <java.version>17</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -24,7 +25,8 @@
       <artifactId>junit-jupiter-api</artifactId>
       <version>5.10.2</version>
       <scope>test</scope>
-      <dependency>
+    </dependency>
+    <dependency>
         <groupId>io.github.bonigarcia</groupId>
         <artifactId>selenium-jupiter</artifactId>
         <version>5.1.0</version>
@@ -34,9 +36,12 @@
       <artifactId>selenium-java</artifactId>
       <version>4.18.1</version>
   </dependency>
-      
+  <dependency>
+    <groupId>org.assertj</groupId>
+    <artifactId>assertj-core</artifactId>
+    <version>3.25.3</version>
+    <scope>test</scope>
   </dependency>
-  
   </dependencies>
 
   <build>
