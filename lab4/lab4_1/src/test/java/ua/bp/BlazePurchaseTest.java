@@ -6,6 +6,7 @@ import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
@@ -13,25 +14,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import io.github.bonigarcia.seljup.SeleniumJupiter;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@ExtendWith(SeleniumJupiter.class)
 public class BlazePurchaseTest {
-    private WebDriver driver;
     private Map<String, Object> vars;
     JavascriptExecutor js;
 
-    @BeforeEach
-    public void setUp() {
-        driver = new FirefoxDriver();
-        js = (JavascriptExecutor) driver;
-        vars = new HashMap<String, Object>();
-    }
-
-    @AfterEach
-    public void tearDown() {
-        driver.quit();
-    }
-
     @Test
-    public void purchasetest() {
+    public void purchasetest(WebDriver driver) {
         driver.get("https://blazedemo.com/");
         driver.manage().window().setSize(new Dimension(1550, 878));
         driver.findElement(By.name("fromPort")).click();
@@ -69,6 +62,6 @@ public class BlazePurchaseTest {
         driver.findElement(By.id("nameOnCard")).sendKeys("weqweqw");
         driver.findElement(By.cssSelector(".btn-primary")).click();
         driver.findElement(By.cssSelector("h1")).click();
-        assertThat(driver.findElement(By.cssSelector("h1")).getText(), is("Thank you for your purchase today!"));
+        assertThat(driver.findElement(By.cssSelector("h1")).getText()).isEqualTo("Thank you for your purchase today!");
     }
 }
