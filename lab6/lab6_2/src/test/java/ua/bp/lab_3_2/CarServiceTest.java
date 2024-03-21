@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
-public class CarServiceTest {
+class CarServiceTest {
     @Mock(lenient = true)
     private CarRepository repo;
 

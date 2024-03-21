@@ -27,7 +27,7 @@ import ua.bp.lab_3_2.data.Car;
 import ua.bp.lab_3_2.service.CarManagerService;
 
 @WebMvcTest(CarController.class)
-public class CarRestControllerTest {
+class CarRestControllerTest {
     @Autowired
     private MockMvc mvc;
 

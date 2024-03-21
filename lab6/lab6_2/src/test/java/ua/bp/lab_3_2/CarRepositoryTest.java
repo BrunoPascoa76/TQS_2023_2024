@@ -15,7 +15,7 @@ import ua.bp.lab_3_2.data.Car;
 import ua.bp.lab_3_2.data.CarRepository;
 
 @DataJpaTest
-public class CarRepositoryTest {
+class CarRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
 
