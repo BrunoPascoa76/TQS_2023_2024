@@ -21,3 +21,9 @@
   * 1 medium issue (constructor injection)
   * 4 low issues (unused imports and removing public modifier)
   * Debt: 22min
+
+## Second run
+
+### Changes
+
+All issues resolved
