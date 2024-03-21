@@ -7,7 +7,6 @@ package tqs.sets;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.*;
-import tqs.sets.BoundedSetOfNaturals;
 
 /**
  * @author ico0

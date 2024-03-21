@@ -1,7 +1,5 @@
 package tqs.euromillions;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -105,7 +103,7 @@ public class Dip {
 
 
     /**
-     * prepares a string representation of the data structure, formated for
+     * prepares a string representation of the data structure, formatted for
      * printing
      *
      * @return formatted string with data
@@ -118,7 +116,7 @@ public class Dip {
         }
         sb.append("] S[");
         for (int star : getStarsColl()) {
-            // the formating codes were missing
+            // the formatting codes were missing
             sb.append(String.format("%3d", star));
         }
         sb.append("]");
