@@ -11,7 +11,7 @@ import ua.bp.lab_3_2.data.CarRepository;
 
 @Service
 public class CarManagerServiceImpl implements CarManagerService {
-    @Autowired
+    
     private CarRepository repo;
 
     public Car save(Car car){
