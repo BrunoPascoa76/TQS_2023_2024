@@ -1,13 +1,8 @@
 package ua.tqs.bp.data;
 
-import jakarta.persistence.FetchType;
-import java.util.List;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,15 +15,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class User {
+public class Seat {
     @Id
     @GeneratedValue
     private long id;
-
-    @Column(unique = true)
-    private String username;
-    private String password; // pre-hashed, of course
-
-    @OneToMany(fetch=FetchType.LAZY)
-    private List<Reservation> reservations;
+    
+    private int number;
 }
