@@ -1,8 +1,7 @@
 package ua.tqs.bp.lab7_3;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
@@ -10,15 +9,14 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+@SpringBootTest
 @Testcontainers
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class Lab73ApplicationTests {
 
 	@Autowired
@@ -55,7 +53,7 @@ class Lab73ApplicationTests {
 	@Test
 	@Order(3)
 	void testFindBookByName() {
-		Book book = repo.findByName("Book of Tomerry");
+		Book book = repo.findByTitle("Book of Tomerry");
 		assertNotNull(book);
 	}
 
@@ -65,4 +63,5 @@ class Lab73ApplicationTests {
 		Book book = repo.findById(1);
 		assertEquals("Book of Bamboo-hatted Kim", book.getTitle());
 	}
+
 }

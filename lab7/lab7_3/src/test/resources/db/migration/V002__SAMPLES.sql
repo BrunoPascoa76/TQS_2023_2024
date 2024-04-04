@@ -1,6 +1,6 @@
-INSERT INTO book (id,title) 
+INSERT INTO book (title) 
 VALUES 
-    (1,'Book of Bamboo-hatted Kim'),
-    (2,'Book of Pierre'),
-    (3,'Book of Distortion'),
-    (4,'Book of Tomerry');
+    ('Book of Bamboo-hatted Kim'),
+    ('Book of Pierre'),
+    ('Book of Distortion'),
+    ('Book of Tomerry');
