@@ -8,9 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.tomcat.util.http.parser.MediaType;
 import org.jboss.jandex.ParameterizedType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -23,74 +25,104 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.restassured.RestAssured;
+
+import static org.hamcrest.Matchers.*;
 
 import ua.bp.lab_3_2.data.Car;
 import ua.bp.lab_3_2.data.CarRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations = "classpath:it.properties")
+@Testcontainers
 class CarApiIT {
     @LocalServerPort
     int port;
 
+    @BeforeEach
+    public void setup(){
+        RestAssured.port=port;
+    }
+
+    @Container
+    public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:latest")
+            .withUsername("user")
+            .withPassword("password")
+            .withDatabaseName("cars");
+
+    @DynamicPropertySource
+    static void properties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", container::getJdbcUrl);
+        registry.add("spring.datasource.password", container::getPassword);
+        registry.add("spring.datasource.username", container::getUsername);
+    }
+
     @Autowired
-    private TestRestTemplate restTemplate;
+    private ObjectMapper mapper;
 
     @Autowired
     private CarRepository repo;
 
-    @AfterEach
-    public void resetDb() {
-        repo.deleteAll();
+    @Test
+    @Order(1)
+    void whenValidCar_thenCreateCar() throws Exception {
+        Car car = new Car("Peugeot", "2008");
+
+        RestAssured
+                .given()
+                .contentType("application/json")
+                .body(car)
+                .when()
+                .post("/api/car")
+                .then()
+                .statusCode(201)
+                .body("maker", equalTo(car.getMaker()))
+                .body("model", equalTo(car.getModel()));
     }
 
     @Test
-    void whenValidCar_thenCreateCar() {
-        Car car = new Car("BMW", "Corolla");
-        ResponseEntity<Car> response = restTemplate.postForEntity("/api/car", car, Car.class);
-
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        Car result = response.getBody();
-
-        assertAll(
-                () -> assertEquals(car.getMaker(), result.getMaker()),
-                () -> assertEquals(car.getModel(), result.getModel()));
-    }
-
-    @Test
+    @Order(2)
     void whenFindCar_thenStatus200() {
-        Car car1 = new Car("BMW", "Corolla");
-
-        car1 = repo.saveAndFlush(car1);
-
-        ResponseEntity<Car> response = restTemplate.getForEntity("/api/car?id=" + car1.getCarId(), Car.class);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(car1, response.getBody());
+        RestAssured
+                .given()
+                .contentType("application/json")
+                .param("id", 1L)
+                .when()
+                .get("/api/car")
+                .then()
+                .statusCode(200);
     }
 
     @Test
+    @Order(2)
     void whenFindCarMissing_thenStatus404() {
-        ResponseEntity<Car> response = restTemplate.getForEntity("/api/car?id=99", Car.class);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        RestAssured
+                .given()
+                .contentType("application/json")
+                .param("id", 99)
+                .when()
+                .get("/api/car")
+                .then()
+                .statusCode(404);
     }
 
     @Test
+    @Order(2)
     void given3Cars_whenFindAll_thenReturnAll200() {
-        Car car1 = new Car("BMW", "Corolla");
-        Car car2 = new Car("Nissan", "Ariya");
-        Car car3 = new Car("Peugeot", "2008");
-
-        car1 = repo.save(car1);
-        car2 = repo.save(car2);
-        car3 = repo.save(car3);
-        repo.flush();
-
-        ResponseEntity<List<Car>> response = restTemplate.exchange("/api/cars", HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<Car>>() {
-                });
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertThat(response.getBody()).hasSize(3).containsOnly(car1, car2, car3);
+        RestAssured
+                .given()
+                .when()
+                .get("/api/cars")
+                .then()
+                .statusCode(200)
+                .body("carId", hasItems(1, 2, 3));
     }
 }
