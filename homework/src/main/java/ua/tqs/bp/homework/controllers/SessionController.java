@@ -1,4 +1,4 @@
-package ua.tqs.bp.controller;
+package ua.tqs.bp.homework.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
