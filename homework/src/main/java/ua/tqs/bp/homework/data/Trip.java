@@ -32,6 +32,9 @@ public class Trip {
     private long id;
     private int busNumber;
 
+    @Temporal(TemporalType.DATE)
+    private Date day;
+
     @Temporal(TemporalType.TIME)
     private Date fromTime;
     @Temporal(TemporalType.TIME)

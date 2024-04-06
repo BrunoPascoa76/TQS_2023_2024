@@ -1,0 +1,27 @@
+Feature: Booking Trips
+    # Look for V002_Examples.sql for the pre-existing values
+
+    Scenario: List trips (all)
+        When I try to list all trips
+        Then I get X results
+            
+    Scenario: List trips (with parameters)
+        When I try to list all trips between "Porto" and "Aveiro" on 06/04/2024
+        Then I get X results
+
+    Scenario: Choose seat success 
+        When I choose the trip with the ID 1
+        And I choose seat number 11
+        Then it returns me a status 201 message
+
+    Scenario: Choose seat failed (occupied)
+        When I choose the trip with the ID 1
+        And I choose seat number 41
+        Then it returns me a status 409 message
+
+    Scenario: Choose seat failed (out of bounds)
+        When I choose the trip with the ID 1
+        And I choose seat number 200
+        Then it returns me a status 403 message
+
+
