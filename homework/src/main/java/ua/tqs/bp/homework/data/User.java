@@ -2,6 +2,7 @@ package ua.tqs.bp.homework.data;
 
 import jakarta.persistence.FetchType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -33,4 +34,14 @@ public class User {
     
     @OneToMany(fetch=FetchType.LAZY)
     private List<Reservation> reservations;
+
+    public User(String username, String password){
+        this.username=username;
+        this.password=password;
+        this.reservations=new ArrayList<>();
+    }
+
+    public void addReservation(Reservation reservation){
+        this.reservations.add(reservation);
+    }
 }

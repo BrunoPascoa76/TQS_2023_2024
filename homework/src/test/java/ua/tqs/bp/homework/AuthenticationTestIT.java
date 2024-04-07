@@ -11,13 +11,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
-import static org.hamcrest.Matchers.*;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -39,11 +37,7 @@ public class AuthenticationTestIT {
         registry.add("spring.datasource.url", container::getJdbcUrl);
         registry.add("spring.datasource.username", container::getUsername);
         registry.add("spring.datasource.password", container::getPassword);
-    }
-
-    @Given("a working server connection")
-    public void setupRestAssured() {
-        RestAssured.port = port;
+        RestAssured.port=port;
     }
 
     @When("I try to login with the username {string} and the password {string}")
@@ -52,6 +46,7 @@ public class AuthenticationTestIT {
         
         response = RestAssured
                 .given()
+                .port(port)
                 .contentType("application/json")
                 .body(requestBody)
                 .when()

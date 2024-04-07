@@ -15,6 +15,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -24,6 +25,7 @@ import io.restassured.response.Response;
 import net.minidev.json.JSONObject;
 
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
+@Testcontainers
 public class BookingTestIT {
     @LocalServerPort
     int port;
@@ -42,11 +44,6 @@ public class BookingTestIT {
         registry.add("spring.datasource.url", container::getJdbcUrl);
         registry.add("spring.datasource.username", container::getUsername);
         registry.add("spring.datasource.password", container::getPassword);
-    }
-
-    @Given("a working server connection")
-    public void setupRestAssured() {
-        RestAssured.port = port;
     }
 
     @When("I try to list all trips")
