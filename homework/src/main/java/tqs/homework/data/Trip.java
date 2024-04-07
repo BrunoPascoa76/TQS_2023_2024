@@ -1,4 +1,4 @@
-package ua.tqs.bp.homework.data;
+package tqs.homework.data;
 
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -34,7 +34,7 @@ public class Trip {
     private int busNumber;
 
     @Temporal(TemporalType.DATE)
-    private Date day;
+    private Date tripDate;
 
     @Temporal(TemporalType.TIME)
     private Time fromTime;

@@ -1,10 +1,11 @@
-package ua.tqs.bp.homework.data;
+package tqs.homework.data;
 
 import jakarta.persistence.FetchType;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -19,7 +20,7 @@ import lombok.Setter;
  * Entity that represents each account in the website
  */
 @Entity
-@Table(name="user")
+@Table(name="users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,6 +30,7 @@ public class User {
 
     @Id
     private String username;
+    @Column(name="pwd")
     private String password; // pre-hashed, of course
     
     

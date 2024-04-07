@@ -1,4 +1,4 @@
-package ua.tqs.bp.homework.controllers;
+package tqs.homework.controllers;
 
 import java.nio.charset.StandardCharsets;
 
@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.hash.Hashing;
 
 import jakarta.servlet.http.HttpSession;
-import ua.tqs.bp.homework.data.User;
-import ua.tqs.bp.homework.services.AuthenticationService;
+import tqs.homework.data.User;
+import tqs.homework.services.AuthenticationService;
 
 @RestController
 @RequestMapping("/api")
 public class SessionController {
-
-    private final AuthenticationService auth;
+    @Autowired
+    private AuthenticationService auth;
 
     @Autowired
     public SessionController(AuthenticationService auth){

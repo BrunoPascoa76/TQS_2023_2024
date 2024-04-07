@@ -1,4 +1,4 @@
-package ua.tqs.bp.homework.data;
+package tqs.homework.data;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

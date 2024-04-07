@@ -1,4 +1,4 @@
-package ua.tqs.bp.homework.controllers;
+package tqs.homework.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

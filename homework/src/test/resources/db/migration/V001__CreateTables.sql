@@ -1,12 +1,12 @@
-create table user (
-	username VARCHAR(256) PRIMARY KEY,
-	[password] VARCHAR(256)
+CREATE TABLE IF NOT EXISTS users (
+  username VARCHAR(256) PRIMARY KEY,
+  pwd VARCHAR(256)
 );
 
-create table trip (
-	id BIGSERIAL PRIMARY KEY IDENTITY(1,1),
-	busNumber int,
-    [date] DATE,
+create table IF NOT EXISTS trip (
+    id BIGSERIAL PRIMARY KEY,
+    busNumber int,
+    tripDate DATE,
     fromTime TIME,
     toTime TIME,
     fromLocation VARCHAR(64),
@@ -15,8 +15,6 @@ create table trip (
 );
 
 create table reservation (
-    id BIGSERIAL PRIMARY KEY IDENTITY(1,1),
-    username VARCHAR(256) FOREIGN KEY REFERENCES [user](username),
-    trip BIGSERIAL FOREIGN KEY REFERENCES trip(id),
-    seat INT
-);
+    id BIGSERIAL PRIMARY KEY,
+    username VARCHAR(256),
+    trip BIGSERIAL,seat INT);

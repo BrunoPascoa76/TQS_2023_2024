@@ -1,21 +1,16 @@
-package ua.tqs.bp.homework.services;
+package tqs.homework.services;
 
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ua.tqs.bp.homework.data.User;
-import ua.tqs.bp.homework.repositories.UserRepository;
+import tqs.homework.data.User;
+import tqs.homework.repositories.UserRepository;
 
 @Service
 public class AuthenticationService {
-    private final UserRepository repo;
-
     @Autowired
-    public AuthenticationService(UserRepository repo){
-        this.repo=repo;
-    }
-
+    private UserRepository repo;
 
     public User login(String username, String password){
         Optional<User> result=repo.findByUsernameAndPassword(username, password);
