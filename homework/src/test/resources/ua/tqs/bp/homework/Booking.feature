@@ -6,11 +6,11 @@ Feature: Booking Trips
 
     Scenario: List trips (all)
         When I try to list all trips
-        Then I get 2 results
+        Then I get 3 results
             
     Scenario: List trips (with parameters)
-        When I try to list all trips between "Porto" and "Aveiro" on "06/04/2024"
-        Then I get 3 results
+        When I try to list all trips between "Porto" and "Aveiro" on "2024/04/06"
+        Then I get 2 results
 
     Scenario: Choose seat success 
         When I choose the trip with the ID 1

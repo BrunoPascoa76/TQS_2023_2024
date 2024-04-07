@@ -3,7 +3,8 @@ package ua.tqs.bp.homework.data;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -36,9 +37,9 @@ public class Trip {
     private Date day;
 
     @Temporal(TemporalType.TIME)
-    private Date fromTime;
+    private Time fromTime;
     @Temporal(TemporalType.TIME)
-    private Date toTime;
+    private Time toTime;
 
     private String fromLocation;
     private String toLocation;
