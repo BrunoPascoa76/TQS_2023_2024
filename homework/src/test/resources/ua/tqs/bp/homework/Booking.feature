@@ -1,13 +1,16 @@
 Feature: Booking Trips
     # Look for V002_Examples.sql for the pre-existing values
 
+    Background:
+        Given a working server connection
+
     Scenario: List trips (all)
         When I try to list all trips
-        Then I get X results
+        Then I get 2 results
             
     Scenario: List trips (with parameters)
-        When I try to list all trips between "Porto" and "Aveiro" on 06/04/2024
-        Then I get X results
+        When I try to list all trips between "Porto" and "Aveiro" on "06/04/2024"
+        Then I get 3 results
 
     Scenario: Choose seat success 
         When I choose the trip with the ID 1

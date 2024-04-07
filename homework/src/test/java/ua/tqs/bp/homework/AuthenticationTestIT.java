@@ -35,14 +35,14 @@ public class AuthenticationTestIT {
             .withDatabaseName("testDB");
 
     @DynamicPropertySource
-    private void setupContainer(DynamicPropertyRegistry registry) {
+    public void setupContainer(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", container::getJdbcUrl);
         registry.add("spring.datasource.username", container::getUsername);
         registry.add("spring.datasource.password", container::getPassword);
     }
 
     @Given("a working server connection")
-    private void setupRestAssured() {
+    public void setupRestAssured() {
         RestAssured.port = port;
     }
 
