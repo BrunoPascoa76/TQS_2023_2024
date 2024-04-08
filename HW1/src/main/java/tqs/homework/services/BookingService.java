@@ -21,39 +21,45 @@ public class BookingService {
     private TripRepository tripRepo;
     private ReservationRepository resRepo;
     private UserRepository userRepo;
-    
+
     @Autowired
-    public BookingService(AuthenticationService authService, TripRepository tripRepo, ReservationRepository resRepo, UserRepository userRepo){
-        this.authService=authService;
-        this.tripRepo=tripRepo;
-        this.resRepo=resRepo;
-        this.userRepo=userRepo;
+    public BookingService(AuthenticationService authService, TripRepository tripRepo, ReservationRepository resRepo,
+            UserRepository userRepo) {
+        this.authService = authService;
+        this.tripRepo = tripRepo;
+        this.resRepo = resRepo;
+        this.userRepo = userRepo;
     }
 
-    public List<Trip> getTrips(){
+    public List<Trip> getTrips() {
         return tripRepo.findAll();
     }
 
-    public List<Trip> getTrips(Date tripDate,String fromLocation,String toLocation){
+    public List<Trip> getTrips(Date tripDate, String fromLocation, String toLocation) {
         return tripRepo.findByTripDateAndFromLocationAndToLocation(tripDate, fromLocation, toLocation);
     }
 
-    public Optional<Reservation> reserveSeat(String token,long tripId,int seatNum){
-        Optional<User> userToken=authService.getFromToken(token);
-        if(userToken.isEmpty()){
-            return Optional.empty();
-        }else{
-            User user=userToken.get();
-            Optional<Trip> trip=tripRepo.findById(tripId);
-            if(trip.isEmpty() || seatNum>trip.get().getNumSeats()){
-                return Optional.empty();
-            }else{
-                Reservation reservation=new Reservation(user, trip.get(), seatNum);
-                reservation=resRepo.save(reservation);
-                user.addReservation(reservation);
-                user=userRepo.save(user);
-                return Optional.of(reservation);
-            }
+    public Optional<Reservation> reserveSeat(String token, long tripId, int seatNum) {
+        Optional<User> userToken = authService.getFromToken(token);
+        Optional<Trip> trip = tripRepo.findById(tripId);
+        Optional<Reservation> oldReservation = resRepo.findByTripIdAndSeat(tripId, seatNum);
+
+        if (userToken.isPresent()
+                && trip.isPresent()
+                && seatNum > 0
+                && seatNum <= trip.get().getNumSeats()
+                && oldReservation.isEmpty()) {
+            User user = userToken.get();
+            Reservation reservation = new Reservation(user, trip.get(), seatNum);
+            reservation = resRepo.save(reservation);
+            user.addReservation(reservation);
+            userRepo.save(user);
+            return Optional.of(reservation);
         }
+        return Optional.empty();
+    }
+
+    public void setAuthService(AuthenticationService authService){ //this is here because, when testing services, if I instantiate this class the normal way (@InjectMocks and spring/mockito handle the rest), this.authService will be null and manually instantiating it causes an error, so setting it afterwards is the best option for now
+        this.authService=authService;
     }
 }
