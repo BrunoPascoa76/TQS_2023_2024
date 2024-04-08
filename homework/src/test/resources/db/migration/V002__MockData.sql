@@ -7,6 +7,6 @@ insert into trip (busNumber,tripDate,fromTime,toTime,fromLocation,toLocation) va
 insert into trip (busNumber,tripDate,fromTime,toTime,fromLocation,toLocation) values (2,'2024-04-06','12:30','13:15','Aveiro','Figueira da Foz');
 
 --booking
-insert into reservation (username,trip,seat) values ('Bruno',1,12);
+insert into reservation (username,trip,seat) values ('Bruno',1,11);
 
     

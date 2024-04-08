@@ -26,6 +26,9 @@ public class User {
     private String username;
     @Column(name="pwd")
     private String password; // pre-hashed, of course
+
+    @Column(name="tkn")
+    private String token;
     
     
     @OneToMany(fetch=FetchType.LAZY)
