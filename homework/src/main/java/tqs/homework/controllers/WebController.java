@@ -1,4 +1,4 @@
-package ua.tqs.bp.controller;
+package tqs.homework.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpSession;
 public class WebController {
     @GetMapping("/")
     public String home(HttpSession session) {
-        int userId = (Integer) session.getAttribute("userId");
         return "index";
     }
 }
