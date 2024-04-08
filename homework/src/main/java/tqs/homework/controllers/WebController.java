@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpSession;
 public class WebController {
     @GetMapping("/")
     public String home(HttpSession session) {
-        int userId = (Integer) session.getAttribute("userId");
         return "index";
     }
 }

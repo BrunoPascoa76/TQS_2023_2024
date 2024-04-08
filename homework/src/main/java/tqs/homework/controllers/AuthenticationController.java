@@ -18,12 +18,11 @@ import tqs.homework.services.AuthenticationService;
 
 @RestController
 @RequestMapping("/api")
-public class SessionController {
-    @Autowired
+public class AuthenticationController {
     private AuthenticationService auth;
 
     @Autowired
-    public SessionController(AuthenticationService auth){
+    public AuthenticationController(AuthenticationService auth){
         this.auth=auth;
     }
 
