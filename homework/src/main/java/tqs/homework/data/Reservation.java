@@ -34,4 +34,9 @@ public class Reservation {
         this.trip=trip;
         this.seat=seat;
     }
+
+    public Reservation(long tripId,int seat){//for requests
+        this.trip=new Trip(tripId);
+        this.seat=seat;
+    }
 }

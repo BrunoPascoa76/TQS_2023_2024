@@ -51,4 +51,14 @@ public class Trip {
         this.fromLocation=fromLocation;
         this.toLocation=toLocation;
     }
+
+    public Trip(Date tripDate,String fromLocation,String toLocation){
+        this.tripDate=tripDate;
+        this.fromLocation=fromLocation;
+        this.toLocation=toLocation;
+    }
+
+    public Trip(long id){
+        this.id=id;
+    }
 }
