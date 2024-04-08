@@ -41,7 +41,7 @@
             <div th:if="${user==null}" class="col-6">
               <span class="text-light">
                 Welcome back,
-                <span th:text="${username}">{user}</span>
+                <span th:text="${username}"></span>
               </span>
             </div>
             <div th:unless="${username==null}" class="row">
@@ -59,41 +59,20 @@
           </div>
         </div>
       </nav>
-      <h1>Welcome to TicketBus</h1>
-      <form>
-        <div class="form">
-          <div class="row">
-            <div class="col">
-              <label class="my-1 mr-2" for="fromLocation">From:</label>
-              <select class="custom-select mr-sm-2" id="fromLocation">
-                <option selected>Choose...</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
-            </div>
-            <div class="col">
-              <label class="my-1 mr-2" for="toLocation">toLocation</label>
-              <select class="custom-select mr-sm-2" id="toLocation">
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
-            </div>
-            <div class="col-3 date">
-              <label class="my-1 mr-2" for="tripDate">Day (yyyy-MM-dd):</label>
-              <input type='text' class="form-control" id="tripDate"></div>
-            </div>
-          </div>
-          </div>
-          <div class="row">
-            <div class="col text-center">
-              <button type="button" class="btn btn-primary col-cm-3">Search</button>
-            </div>
-          </div>
+      <h1>Login</h1>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" class="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" class="form-control" id="password" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </main>
-    <script src="@{/js/index.js}"></script>
+    <script src="@{/js/login.js}"></script>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
