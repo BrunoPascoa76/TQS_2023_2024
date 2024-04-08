@@ -186,7 +186,7 @@ class ControllerTests {
 		Reservation schedule = new Reservation(
 				new User("Rodrigo", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"), trips.get(0),
 				12);
-		when(bookingService.reserveSeat(any(), any())).thenReturn(Optional.of(schedule));
+		when(bookingService.reserveSeat(any(),any(), any())).thenReturn(Optional.of(schedule));
 		JSONObject requestBody = new JSONObject();
 		requestBody.put("tripId", 1L);
 		requestBody.put("seatNum", 12);
@@ -204,7 +204,7 @@ class ControllerTests {
 	@Test
 	@Order(2)
 	void scheduleTripSeatOccupied() throws JSONException{
-		when(bookingService.reserveSeat(any(), any())).thenReturn(Optional.empty());
+		when(bookingService.reserveSeat(any(),any(), any())).thenReturn(Optional.empty());
 		JSONObject requestBody = new JSONObject();
 		requestBody.put("tripId", 1L);
 		requestBody.put("seatNum", 11);
@@ -227,7 +227,7 @@ class ControllerTests {
 		Reservation schedule = new Reservation(
 				new User("Rodrigo", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"), trips.get(0),
 				12);
-		when(bookingService.reserveSeat(any(), any())).thenReturn(Optional.of(schedule));
+		when(bookingService.reserveSeat(any(), any(),any())).thenReturn(Optional.of(schedule));
 		JSONObject requestBody = new JSONObject();
 		requestBody.put("tripId", 1L);
 		requestBody.put("seatNum", 12);

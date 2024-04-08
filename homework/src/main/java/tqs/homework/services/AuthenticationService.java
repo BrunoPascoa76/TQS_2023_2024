@@ -13,8 +13,12 @@ import tqs.homework.repositories.UserRepository;
 
 @Service
 public class AuthenticationService {
-    @Autowired
     private UserRepository repo;
+
+    @Autowired
+    public AuthenticationService(UserRepository repo){
+        this.repo=repo;
+    }
 
     public User login(String username, String password){
         Optional<User> result=repo.findByUsernameAndPwd(username, password);
@@ -35,6 +39,10 @@ public class AuthenticationService {
         }else{
             return null;
         }
+    }
+
+    public Optional<User> getFromToken(String token){
+        return repo.findByTkn(token);
     }
 
     public static String generateToken() throws NoSuchAlgorithmException {
