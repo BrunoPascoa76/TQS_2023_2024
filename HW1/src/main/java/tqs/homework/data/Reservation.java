@@ -22,6 +22,7 @@ public class Reservation {
     private long id;
 
     @ManyToOne
+    @JoinColumn(name="username")
     private User user;
 
     @ManyToOne

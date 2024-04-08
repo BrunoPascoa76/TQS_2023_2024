@@ -38,29 +38,28 @@
             </li>
           </ul>
           <div class="ml-auto row">
-            <div th:if="${user==null}" class="col-6">
+            <div th:if="${username!=null}" class="col-6">
               <span class="text-light">
                 Welcome back,
                 <span th:text="${username}"></span>
               </span>
             </div>
-            <div th:unless="${username==null}" class="row">
-              <button type="button" class="btn btn-primary col-6" href="/login">
+            <div th:if="${username==null}" class="row">
+              <a type="button" class="btn btn-primary col-6" href="/login">
                 Login
-              </button>
-              <button
+              </a>
+              <a
                 type="button"
                 class="btn btn-secondary col-6"
                 href="/register"
               >
                 Register
-              </button>
+            </a>
             </div>
           </div>
         </div>
       </nav>
       <h1>Register</h1>
-      <form id="registerForm" onsubmit="register()">
         <div class="form-group">
           <label for="username">Username:</label>
           <input type="text" class="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter username" required>
@@ -69,10 +68,9 @@
           <label for="password">Password:</label>
           <input type="password" class="form-control" id="password" placeholder="Password" required>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
+        <button type="button" th:onclick="register()" class="btn btn-primary">Submit</button>
     </main>
-    <script src="@{/js/register.js}"></script>
+    <script th:src="@{/js/register.js}"></script>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

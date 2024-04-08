@@ -1,18 +1,21 @@
-function updateSeatAvailability(btn) {
-  const btnId = element.Id;
+function reserve(btn) {
+  const btnId = btn.id;
   const tripId = btnId.slice(3);
   const seat = document.getElementById("seat" + tripId);
   const seatNum = parseInt(seat.value);
-  const token = localStorage.get("token");
+  const token = localStorage.getItem("token");
   const data = {
-    tripId: tripId,
-    value: seatNum,
+    "trip":{
+      "id":tripId
+    },
+    "seat": seatNum,
   };
   if (token) {
     fetch("/api/trips/schedule", {
       method: "POST",
       headers: {
-        token: `${token}`, // Assuming token is stored with prefix "Bearer "
+        "Token": `${token}`,
+        "Content-Type": 'application/json'
       },
       body: JSON.stringify(data),
     })

@@ -1,21 +1,22 @@
 package tqs.homework.controllers;
 
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import tqs.homework.data.User;
 import tqs.homework.services.AuthenticationService;
 import tqs.homework.services.BookingService;
 
-@RestController
+@Controller
 @RequestMapping("/")
 public class WebController {
 
@@ -28,7 +29,7 @@ public class WebController {
         this.bookingService=bookingService;
     }
 
-    @GetMapping("/")
+    @GetMapping({"/","/home","/index"})
     public String home(@RequestHeader(name="token",required=false) String token, Model model) {
         if(token!=null){
             Optional<User> user=authService.getFromToken(token);
@@ -36,6 +37,7 @@ public class WebController {
                 model.addAttribute("username", user.get().getUsername());
             }
         }
+        model.addAttribute("locations",Arrays.asList("Porto","Aveiro","Figueira da Foz"));
         return "index";
     }
 

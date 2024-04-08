@@ -31,7 +31,7 @@ public class User {
     private String token;
     
     
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<Reservation> reservations;
 
     public User(String username, String password){
