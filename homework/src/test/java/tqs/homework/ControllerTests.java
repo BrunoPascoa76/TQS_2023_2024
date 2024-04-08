@@ -34,14 +34,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class ControllerTests {
 
-	private String token;
+	private String token="3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0";
 
 	@Autowired
 	private MockMvc mock;
@@ -72,6 +72,7 @@ class ControllerTests {
 	@Order(1)
 	void testLoginSuccessful() throws JsonProcessingException {
 		User user = new User("Bruno", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8");
+		user.setToken("3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0");
 		when(authService.login(any(), any())).thenReturn(user);
 		given()
 				.mockMvc(mock)
@@ -103,8 +104,9 @@ class ControllerTests {
 	@Order(1)
 	void testRegisterSuccessful() throws JsonProcessingException, NoSuchAlgorithmException {
 		User user = new User("João", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8");
+		user.setToken("3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0");
 		when(authService.register(any(), any())).thenReturn(user);
-		token=given()
+		given()
 				.mockMvc(mock)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(mapper.writeValueAsString(user))
@@ -112,9 +114,7 @@ class ControllerTests {
 				.post("/api/register")
 				.then()
 				.statusCode(201)
-				.body("$",hasKey("token"))
-				.extract()
-				.path("token");
+				.body("$",hasKey("token"));
 	}
 
 	@Test
@@ -155,8 +155,9 @@ class ControllerTests {
 		when(bookingService.getTrips(any(), any(), any())).thenReturn(Arrays.asList(trips.get(0), trips.get(1)));
 		given()
 				.mockMvc(mock)
-				.param("date",dateInMillis)
-				.param("Porto", "Aveiro")
+				.param("tripDate", dateInMillis)
+				.param("fromLocation","Porto")
+				.param("toLocation","Aveiro")
 				.when()
 				.get("/api/trips")
 				.then()
@@ -182,19 +183,17 @@ class ControllerTests {
 
 	@Test
 	@Order(2)
-	void scheduleTripSuccess() throws JSONException {
+	void scheduleTripSuccess() throws JSONException, JsonProcessingException {
 		Reservation schedule = new Reservation(
 				new User("Rodrigo", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"), trips.get(0),
 				12);
-		when(bookingService.reserveSeat(any(),any(), any())).thenReturn(Optional.of(schedule));
-		JSONObject requestBody = new JSONObject();
-		requestBody.put("tripId", 1L);
-		requestBody.put("seat", 12);
+		when(bookingService.reserveSeat(any(),anyLong(), anyInt())).thenReturn(Optional.of(schedule));
 
 		given()
 				.mockMvc(mock)
+				.header("token",token)
 				.contentType(MediaType.APPLICATION_JSON)
-				.body(requestBody.toString())
+				.body(mapper.writeValueAsString(schedule))
 				.when()
 				.post("/api/trips/schedule")
 				.then()
@@ -203,17 +202,17 @@ class ControllerTests {
 
 	@Test
 	@Order(2)
-	void scheduleTripSeatOccupied() throws JSONException{
-		when(bookingService.reserveSeat(any(),any(), any())).thenReturn(Optional.empty());
-		JSONObject requestBody = new JSONObject();
-		requestBody.put("tripId", 1L);
-		requestBody.put("seat", 11);
+	void scheduleTripSeatOccupied() throws JSONException, JsonProcessingException{
+		when(bookingService.reserveSeat(any(),anyLong(), anyInt())).thenReturn(Optional.empty());
+		Reservation schedule = new Reservation(
+				new User("Rodrigo", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"), trips.get(0),
+				11);
 
 		given()
 				.mockMvc(mock)
 				.header("token",token)
 				.contentType(MediaType.APPLICATION_JSON)
-				.body(requestBody.toString())
+				.body(mapper.writeValueAsString(schedule))
 				.when()
 				.post("/api/trips/schedule")
 				.then()
@@ -222,24 +221,21 @@ class ControllerTests {
 
 	@Test
 	@Order(2)
-	void scheduleTripNotLoggedIn() throws JSONException{
+	void scheduleTripNotLoggedIn() throws JSONException, JsonProcessingException{
 		//the code is the same as the successful one (except for the token) on purpose, to show that, even if everything's correct, it won't work unless you're logged in
 		Reservation schedule = new Reservation(
 				new User("Rodrigo", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"), trips.get(0),
 				12);
-		when(bookingService.reserveSeat(any(), any(),any())).thenReturn(Optional.of(schedule));
-		JSONObject requestBody = new JSONObject();
-		requestBody.put("tripId", 1L);
-		requestBody.put("seatNum", 12);
+		when(bookingService.reserveSeat(any(), anyLong(),anyInt())).thenReturn(Optional.of(schedule));
 
 		given()
 				.mockMvc(mock)
 				.contentType(MediaType.APPLICATION_JSON)
-				.body(requestBody.toString())
+				.body(mapper.writeValueAsString(schedule))
 				.when()
 				.post("/api/trips/schedule")
 				.then()
-				.statusCode(403);
+				.statusCode(400);
 
 	}
 }

@@ -21,7 +21,7 @@ public class AuthenticationService {
     }
 
     public User login(String username, String password){
-        Optional<User> result=repo.findByUsernameAndPwd(username, password);
+        Optional<User> result=repo.findByUsernameAndPassword(username, password);
         if(result.isPresent()){
             return result.get();
         }else{
@@ -42,7 +42,7 @@ public class AuthenticationService {
     }
 
     public Optional<User> getFromToken(String token){
-        return repo.findByTkn(token);
+        return repo.findByToken(token);
     }
 
     public static String generateToken() throws NoSuchAlgorithmException {

@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,56 +21,61 @@ import tqs.homework.data.Trip;
 import tqs.homework.data.Reservation;
 import tqs.homework.services.BookingService;
 
-
 @RestController
 @RequestMapping("/api")
 public class BookingController {
     private BookingService service;
 
     @Autowired
-    public BookingController(BookingService service){
-        this.service=service;
+    public BookingController(BookingService service) {
+        this.service = service;
     }
 
     @GetMapping("/trips/list")
-    public ResponseEntity<String> getAllTrips(){
-        List<Trip> trips=service.getTrips();
-        return ResponseEntity.status(200).body(processTrips(trips));
+    public ResponseEntity<String> getAllTrips() {
+        List<Trip> trips = service.getTrips();
+        return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(processTrips(trips));
     }
 
     @GetMapping("/trips")
-    public ResponseEntity<String> getTripsParameters(@RequestParam long tripDate,String fromLocation,String toLocation){
-        List<Trip> trips=service.getTrips(new Date(tripDate), fromLocation, toLocation);
-        return ResponseEntity.status(200).body(processTrips(trips));
+    public ResponseEntity<String> getTripsParameters(@RequestParam long tripDate, String fromLocation,
+            String toLocation) {
+        List<Trip> trips = service.getTrips(new Date(tripDate), fromLocation, toLocation);
+        return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(processTrips(trips));
     }
 
     @PostMapping("/trips/schedule")
-    public ResponseEntity<String> bookTrip(@RequestHeader String token, @RequestBody Reservation reservation){
-        Optional<Reservation> result=service.reserveSeat(token, reservation.getTrip().getId(), reservation.getSeat());
-        if(result.isPresent()){
+    public ResponseEntity<String> bookTrip(@RequestHeader String token, @RequestBody Reservation reservation) {
+        Optional<Reservation> result = service.reserveSeat(token, reservation.getTrip().getId(), reservation.getSeat());
+        if (result.isPresent()) {
             return ResponseEntity.status(201).body("scheduling successful");
-        }else{
+        } else {
             return ResponseEntity.status(403).body("token/seat/tripId incorrect/missing");
         }
     }
 
-    private String processTrips(List<Trip> trips){ //it's safer to send the occupiedSeats list instead of the reservations (would reveal usernames)
-        JSONArray result=new JSONArray();
-        for(Trip trip:trips){
-            JSONObject entry=new JSONObject();
-            entry.put("id",trip.getId());
-            entry.put("busNumber",trip.getBusNumber());
-            entry.put("tripDate",trip.getTripDate());
-            entry.put("fromTime",trip.getFromTime());
-            entry.put("toTime",trip.getToTime());
-            entry.put("fromLocation",trip.getFromLocation());
-            entry.put("toLocation",trip.getToLocation());
+    private String processTrips(List<Trip> trips) { // it's safer to send the occupiedSeats list instead of the
+                                                    // reservations (would reveal usernames)
+        JSONArray result = new JSONArray();
+        for (Trip trip : trips) {
+            JSONObject entry = new JSONObject();
+            entry.put("id", trip.getId());
+            entry.put("busNumber", trip.getBusNumber());
+            entry.put("tripDate", trip.getTripDate());
+            entry.put("fromTime", trip.getFromTime());
+            entry.put("toTime", trip.getToTime());
+            entry.put("fromLocation", trip.getFromLocation());
+            entry.put("toLocation", trip.getToLocation());
             entry.put("numSeats", trip.getNumSeats());
 
-            List<Integer> occupiedSeats=new ArrayList<>();
-            for(Reservation reservation: trip.getReservations()){
-                occupiedSeats.add(reservation.getSeat());
+            List<Integer> occupiedSeats = new ArrayList<>();
+            List<Reservation> reservations = trip.getReservations();
+            if (reservations != null) {
+                for (Reservation reservation : reservations) {
+                    occupiedSeats.add(reservation.getSeat());
+                }
             }
+            entry.put("occupiedSeats",new JSONArray(occupiedSeats));
             result.put(entry);
         }
         return result.toString();

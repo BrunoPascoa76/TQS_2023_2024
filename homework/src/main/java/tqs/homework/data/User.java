@@ -1,7 +1,5 @@
 package tqs.homework.data;
 
-import jakarta.persistence.FetchType;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +10,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Entity that represents each account in the website
@@ -19,6 +18,7 @@ import lombok.Data;
 @Entity
 @Table(name="users")
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class User {
 
@@ -31,7 +31,7 @@ public class User {
     private String token;
     
     
-    @OneToMany(fetch=FetchType.LAZY)
+    @OneToMany
     private List<Reservation> reservations;
 
     public User(String username, String password){

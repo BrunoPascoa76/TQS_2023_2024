@@ -8,7 +8,6 @@ import java.sql.Time;
 import java.util.List;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,11 +15,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "trip")
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Trip {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -40,7 +41,7 @@ public class Trip {
 
     private int numSeats=45;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany
     private List<Reservation> reservations;
 
     public Trip(int busNumber,Date tripDate,Time fromTime,Time toTime,String fromLocation,String toLocation){
