@@ -15,17 +15,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 @Entity
 @Table(name = "trip")
-@Getter
-@Setter
-@EqualsAndHashCode
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
 public class Trip {
     @Id
@@ -48,4 +42,13 @@ public class Trip {
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Reservation> reservations;
+
+    public Trip(int busNumber,Date tripDate,Time fromTime,Time toTime,String fromLocation,String toLocation){
+        this.busNumber=busNumber;
+        this.tripDate=tripDate;
+        this.fromTime=fromTime;
+        this.toTime=toTime;
+        this.fromLocation=fromLocation;
+        this.toLocation=toLocation;
+    }
 }

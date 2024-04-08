@@ -11,21 +11,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * Entity that represents each account in the website
  */
 @Entity
 @Table(name="users")
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@Data
 public class User {
 
     @Id
