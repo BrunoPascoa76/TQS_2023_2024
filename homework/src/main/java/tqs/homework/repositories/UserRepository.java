@@ -10,6 +10,6 @@ import tqs.homework.data.User;
 @Repository
 public interface UserRepository extends JpaRepository<User,String> {
     public Optional<User> findByUsername(String username);
-    public Optional<User> findByUsernameAndPwd(String username, String pwd);
-    public Optional<User> findByTkn(String tkn);
+    public Optional<User> findByUsernameAndPassword(String username, String password);
+    public Optional<User> findByToken(String token);
 }

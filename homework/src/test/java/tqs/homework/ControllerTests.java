@@ -155,7 +155,7 @@ class ControllerTests {
 		when(bookingService.getTrips(any(), any(), any())).thenReturn(Arrays.asList(trips.get(0), trips.get(1)));
 		given()
 				.mockMvc(mock)
-				.param(new Date(dateInMillis).toString())
+				.param("date",dateInMillis)
 				.param("Porto", "Aveiro")
 				.when()
 				.get("/api/trips")
@@ -170,7 +170,7 @@ class ControllerTests {
 		when(bookingService.getTrips(any(), any(), any())).thenReturn(new ArrayList<>());
 		given()
 				.mockMvc(mock)
-				.param("date", new Date(dateInMillis).toString())
+				.param("tripDate", dateInMillis)
 				.param("fromLocation", "Porto")
 				.param("toLocation", "Aveiro")
 				.when()
@@ -189,7 +189,7 @@ class ControllerTests {
 		when(bookingService.reserveSeat(any(),any(), any())).thenReturn(Optional.of(schedule));
 		JSONObject requestBody = new JSONObject();
 		requestBody.put("tripId", 1L);
-		requestBody.put("seatNum", 12);
+		requestBody.put("seat", 12);
 
 		given()
 				.mockMvc(mock)
@@ -207,7 +207,7 @@ class ControllerTests {
 		when(bookingService.reserveSeat(any(),any(), any())).thenReturn(Optional.empty());
 		JSONObject requestBody = new JSONObject();
 		requestBody.put("tripId", 1L);
-		requestBody.put("seatNum", 11);
+		requestBody.put("seat", 11);
 
 		given()
 				.mockMvc(mock)
@@ -217,7 +217,7 @@ class ControllerTests {
 				.when()
 				.post("/api/trips/schedule")
 				.then()
-				.statusCode(409);
+				.statusCode(403);
 	}
 
 	@Test
@@ -239,7 +239,7 @@ class ControllerTests {
 				.when()
 				.post("/api/trips/schedule")
 				.then()
-				.statusCode(401);
+				.statusCode(403);
 
 	}
 }
