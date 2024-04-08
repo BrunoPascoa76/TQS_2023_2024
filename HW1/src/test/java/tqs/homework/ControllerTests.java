@@ -1,6 +1,6 @@
 package tqs.homework;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ class ControllerTests {
 	private List<Trip> trips;
 	private long dateInMillis;
 
-	@BeforeAll
+	@BeforeEach
 	void setup() throws ParseException {
 		dateInMillis = new SimpleDateFormat("yyyy-MM-dd").parse("2024-04-06").getTime();
 		Trip trip1 = new Trip(1, new Date(dateInMillis), new Time((21 * 3600 + 35 * 60) * 1000),

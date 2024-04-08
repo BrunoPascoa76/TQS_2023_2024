@@ -49,9 +49,9 @@ public class BookingService {
                 return Optional.empty();
             }else{
                 Reservation reservation=new Reservation(user, trip.get(), seatNum);
-                resRepo.save(reservation);
+                reservation=resRepo.save(reservation);
                 user.addReservation(reservation);
-                userRepo.save(user);
+                user=userRepo.save(user);
                 return Optional.of(reservation);
             }
         }

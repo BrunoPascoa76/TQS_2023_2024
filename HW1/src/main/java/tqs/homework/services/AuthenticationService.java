@@ -29,7 +29,7 @@ public class AuthenticationService {
         if(!result.isPresent()){
             User user=new User(username,password);
             user.setToken(generateToken());
-            repo.save(user);
+            user=repo.save(user);
             return Optional.of(user);
         }else{
             return Optional.empty();
