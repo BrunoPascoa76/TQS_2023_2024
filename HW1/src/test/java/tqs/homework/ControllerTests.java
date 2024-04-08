@@ -71,7 +71,7 @@ class ControllerTests {
 	void testLoginSuccessful() throws JsonProcessingException {
 		User user = new User("Bruno", "password");
 		user.setToken("3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0");
-		when(authService.login(any(), any())).thenReturn(Optional.of(user));
+		when(authService.login("Bruno", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8")).thenReturn(Optional.of(user));
 		given()
 				.mockMvc(mock)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -85,9 +85,24 @@ class ControllerTests {
 
 	@Test
 	@Order(1)
-	void testLoginWrongCredentials() throws JsonProcessingException {
+	void testLoginWrongUsername() throws JsonProcessingException {
 		User user = new User("Rodrigo", "password");
-		when(authService.login(any(), any())).thenReturn(Optional.empty());
+		when(authService.login("Rodrigo", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8")).thenReturn(Optional.empty());
+		given()
+				.mockMvc(mock)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(mapper.writeValueAsString(user))
+				.when()
+				.post("/api/login")
+				.then()
+				.statusCode(401);
+	}
+
+	@Test
+	@Order(1)
+	void testLoginWrongPassword() throws JsonProcessingException {
+		User user = new User("Bruno", "wrongPassword");
+		when(authService.login("Rodrigo", "4aecb7f750b48cd608b09851345fe9a82405a46751acc0e5fc1b88db3610260b")).thenReturn(Optional.empty());
 		given()
 				.mockMvc(mock)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -103,7 +118,7 @@ class ControllerTests {
 	void testRegisterSuccessful() throws JsonProcessingException, NoSuchAlgorithmException {
 		User user = new User("João", "password");
 		user.setToken("3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0");
-		when(authService.register(any(), any())).thenReturn(Optional.of(user));
+		when(authService.register("João","5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8")).thenReturn(Optional.of(user));
 		given()
 				.mockMvc(mock)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -119,7 +134,7 @@ class ControllerTests {
 	@Order(1)
 	void testRegisterUsernameTaken() throws JsonProcessingException, NoSuchAlgorithmException {
 		User user = new User("Bruno", "something");
-		when(authService.register(any(), any())).thenReturn(Optional.empty());
+		when(authService.register("Bruno","3fc9b689459d738f8c88a3a48aa9e33542016b7a4052e001aaa536fca74813cb")).thenReturn(Optional.empty());
 		given()
 				.mockMvc(mock)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -149,7 +164,7 @@ class ControllerTests {
 	@Test
 	@Order(2)
 	void listTripsParameters() {
-		when(bookingService.getTrips(any(), any(), any())).thenReturn(Arrays.asList(trips.get(0), trips.get(1)));
+		when(bookingService.getTrips(new Date(dateInMillis), "Porto","Aveiro")).thenReturn(Arrays.asList(trips.get(0), trips.get(1)));
 		given()
 				.mockMvc(mock)
 				.param("tripDate", dateInMillis)
@@ -165,12 +180,12 @@ class ControllerTests {
 	@Test
 	@Order(2)
 	void listTripsParametersEmpty() {
-		when(bookingService.getTrips(any(), any(), any())).thenReturn(new ArrayList<>());
+		when(bookingService.getTrips(new Date(dateInMillis),"Porto","Coimbra")).thenReturn(new ArrayList<>());
 		given()
 				.mockMvc(mock)
 				.param("tripDate", dateInMillis)
 				.param("fromLocation", "Porto")
-				.param("toLocation", "Aveiro")
+				.param("toLocation", "Coimbra")
 				.when()
 				.get("/api/trips")
 				.then()
@@ -181,10 +196,11 @@ class ControllerTests {
 	@Test
 	@Order(2)
 	void scheduleTripSuccess() throws JsonProcessingException {
+		trips.get(0).setId(1L);
 		Reservation schedule = new Reservation(
 				new User("Rodrigo", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"), trips.get(0),
 				12);
-		when(bookingService.reserveSeat(any(),anyLong(), anyInt())).thenReturn(Optional.of(schedule));
+		when(bookingService.reserveSeat(token,1L, 12)).thenReturn(Optional.of(schedule));
 
 		given()
 				.mockMvc(mock)
@@ -200,7 +216,8 @@ class ControllerTests {
 	@Test
 	@Order(2)
 	void scheduleTripSeatOccupied() throws JsonProcessingException{
-		when(bookingService.reserveSeat(any(),anyLong(), anyInt())).thenReturn(Optional.empty());
+		trips.get(0).setId(1L);
+		when(bookingService.reserveSeat(token,1L, 11)).thenReturn(Optional.empty());
 		Reservation schedule = new Reservation(
 				new User("Rodrigo", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"), trips.get(0),
 				11);
@@ -220,6 +237,7 @@ class ControllerTests {
 	@Order(2)
 	void scheduleTripNotLoggedIn() throws JsonProcessingException{
 		//the code is the same as the successful one (except for the token) on purpose, to show that, even if everything's correct, it won't work unless you're logged in
+		trips.get(0).setId(1L);
 		Reservation schedule = new Reservation(
 				new User("Rodrigo", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"), trips.get(0),
 				12);
