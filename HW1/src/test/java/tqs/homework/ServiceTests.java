@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import tqs.homework.data.Reservation;
 import tqs.homework.data.Trip;
 import tqs.homework.data.User;
@@ -31,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ServiceTests {
+class ServiceTests {
     @Mock
     private UserRepository userRepo;
     @Mock
@@ -149,6 +148,14 @@ public class ServiceTests {
         when(tripRepo.findById(1L)).thenReturn(Optional.of(trips.get(0)));
         when(resRepo.findByTripIdAndSeat(1L, 12)).thenReturn(Optional.empty());
         assertTrue(bookingService.reserveSeat("wrongToken", 1L, 12).isEmpty());
+    }
+
+    @Test
+    void testReserveSeatTaken(){
+        when(authService.getFromToken(token)).thenReturn(Optional.empty());
+        when(tripRepo.findById(1L)).thenReturn(Optional.of(trips.get(0)));
+        when(resRepo.findByTripIdAndSeat(1L, 11)).thenReturn(Optional.of(oldReservation));
+        assertTrue(bookingService.reserveSeat(token, 1L, 11).isEmpty());
     }
 
     @Test
