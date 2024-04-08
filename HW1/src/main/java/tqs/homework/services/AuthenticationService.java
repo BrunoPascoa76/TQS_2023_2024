@@ -20,24 +20,19 @@ public class AuthenticationService {
         this.repo=repo;
     }
 
-    public User login(String username, String password){
-        Optional<User> result=repo.findByUsernameAndPassword(username, password);
-        if(result.isPresent()){
-            return result.get();
-        }else{
-            return null;
-        }
+    public Optional<User> login(String username, String password){
+        return repo.findByUsernameAndPassword(username, password);
     }
 
-    public User register(String username, String password) throws NoSuchAlgorithmException{
+    public Optional<User> register(String username, String password) throws NoSuchAlgorithmException{
         Optional<User> result=repo.findByUsername(username);
         if(!result.isPresent()){
             User user=new User(username,password);
             user.setToken(generateToken());
             repo.save(user);
-            return user;
+            return Optional.of(user);
         }else{
-            return null;
+            return Optional.empty();
         }
     }
 

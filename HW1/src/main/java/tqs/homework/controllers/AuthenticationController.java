@@ -2,6 +2,7 @@ package tqs.homework.controllers;
 
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +34,10 @@ public class AuthenticationController {
         String password=Hashing.sha256().hashString(loginDetails.getPassword(),StandardCharsets.UTF_8).toString();
 
 
-        User result=auth.login(username,password);
-        if(result!=null){
+        Optional<User> result=auth.login(username,password);
+        if(result.isPresent()){
             JSONObject response=new JSONObject();
-            response.put("token",result.getToken());
+            response.put("token",result.get().getToken());
             return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(response.toString());
 
         }else{
@@ -49,10 +50,10 @@ public class AuthenticationController {
         String username=registerDetails.getUsername();
         String password=Hashing.sha256().hashString(registerDetails.getPassword(),StandardCharsets.UTF_8).toString();
 
-        User result=auth.register(username,password);
-        if(result!=null){
+        Optional<User> result=auth.register(username,password);
+        if(result.isPresent()){
             JSONObject response=new JSONObject();
-            response.put("token",result.getToken());
+            response.put("token",result.get().getToken());
             return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body(response.toString());
         }else{
             return ResponseEntity.status(409).body("Username already exists");
