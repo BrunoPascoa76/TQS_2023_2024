@@ -1,8 +1,6 @@
 package tqs.homework;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +54,7 @@ class ControllerTests {
 	private List<Trip> trips;
 	private long dateInMillis;
 
-	@BeforeEach
+	@BeforeAll
 	void setup() throws ParseException {
 		dateInMillis = new SimpleDateFormat("yyyy-MM-dd").parse("2024-04-06").getTime();
 		Trip trip1 = new Trip(1, new Date(dateInMillis), new Time((21 * 3600 + 35 * 60) * 1000),
@@ -71,9 +69,9 @@ class ControllerTests {
 	@Test
 	@Order(1)
 	void testLoginSuccessful() throws JsonProcessingException {
-		User user = new User("Bruno", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8");
+		User user = new User("Bruno", "password");
 		user.setToken("3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0");
-		when(authService.login(any(), any())).thenReturn(user);
+		when(authService.login(any(), any())).thenReturn(Optional.of(user));
 		given()
 				.mockMvc(mock)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -88,8 +86,8 @@ class ControllerTests {
 	@Test
 	@Order(1)
 	void testLoginWrongCredentials() throws JsonProcessingException {
-		User user = new User("Rodrigo", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8");
-		when(authService.login(any(), any())).thenReturn(null);
+		User user = new User("Rodrigo", "password");
+		when(authService.login(any(), any())).thenReturn(Optional.empty());
 		given()
 				.mockMvc(mock)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -103,9 +101,9 @@ class ControllerTests {
 	@Test
 	@Order(1)
 	void testRegisterSuccessful() throws JsonProcessingException, NoSuchAlgorithmException {
-		User user = new User("João", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8");
+		User user = new User("João", "password");
 		user.setToken("3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0");
-		when(authService.register(any(), any())).thenReturn(user);
+		when(authService.register(any(), any())).thenReturn(Optional.of(user));
 		given()
 				.mockMvc(mock)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -120,8 +118,8 @@ class ControllerTests {
 	@Test
 	@Order(1)
 	void testRegisterUsernameTaken() throws JsonProcessingException, NoSuchAlgorithmException {
-		User user = new User("Bruno", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8");
-		when(authService.register(any(), any())).thenReturn(null);
+		User user = new User("Bruno", "something");
+		when(authService.register(any(), any())).thenReturn(Optional.empty());
 		given()
 				.mockMvc(mock)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -132,7 +130,6 @@ class ControllerTests {
 				.statusCode(409);
 	}
 	// booking tests:
-
 	@MockBean
 	private BookingService bookingService;
 
@@ -183,7 +180,7 @@ class ControllerTests {
 
 	@Test
 	@Order(2)
-	void scheduleTripSuccess() throws JSONException, JsonProcessingException {
+	void scheduleTripSuccess() throws JsonProcessingException {
 		Reservation schedule = new Reservation(
 				new User("Rodrigo", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"), trips.get(0),
 				12);
@@ -202,7 +199,7 @@ class ControllerTests {
 
 	@Test
 	@Order(2)
-	void scheduleTripSeatOccupied() throws JSONException, JsonProcessingException{
+	void scheduleTripSeatOccupied() throws JsonProcessingException{
 		when(bookingService.reserveSeat(any(),anyLong(), anyInt())).thenReturn(Optional.empty());
 		Reservation schedule = new Reservation(
 				new User("Rodrigo", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"), trips.get(0),
@@ -221,7 +218,7 @@ class ControllerTests {
 
 	@Test
 	@Order(2)
-	void scheduleTripNotLoggedIn() throws JSONException, JsonProcessingException{
+	void scheduleTripNotLoggedIn() throws JsonProcessingException{
 		//the code is the same as the successful one (except for the token) on purpose, to show that, even if everything's correct, it won't work unless you're logged in
 		Reservation schedule = new Reservation(
 				new User("Rodrigo", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"), trips.get(0),
