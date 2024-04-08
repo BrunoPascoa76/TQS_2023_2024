@@ -22,6 +22,7 @@ public class WebController {
 
     private AuthenticationService authService;
     private BookingService bookingService;
+    private String username="username";
 
     @Autowired
     public WebController(AuthenticationService authService, BookingService bookingService){
@@ -34,7 +35,7 @@ public class WebController {
         if(token!=null){
             Optional<User> user=authService.getFromToken(token);
             if(user.isPresent()){
-                model.addAttribute("username", user.get().getUsername());
+                model.addAttribute(username, user.get().getUsername());
             }
         }
         model.addAttribute("locations",Arrays.asList("Porto","Aveiro","Figueira da Foz"));
@@ -43,23 +44,11 @@ public class WebController {
 
     @GetMapping("/login")
     public String loginPage(@RequestHeader(name="token",required=false) String token, Model model){
-        if(token!=null){
-            Optional<User> user=authService.getFromToken(token);
-            if(user.isPresent()){
-                model.addAttribute("username", user.get().getUsername());
-            }
-        }
         return "login";
     }
 
     @GetMapping("/register")
     public String registerPage(@RequestHeader(name="token",required=false) String token, Model model){
-        if(token!=null){
-            Optional<User> user=authService.getFromToken(token);
-            if(user.isPresent()){
-                model.addAttribute("username", user.get().getUsername());
-            }
-        }
         return "register";
     }
 
@@ -68,7 +57,7 @@ public class WebController {
         if(token!=null){
             Optional<User> user=authService.getFromToken(token);
             if(user.isPresent()){
-                model.addAttribute("username", user.get().getUsername());
+                model.addAttribute(username, user.get().getUsername());
             }
         }
         model.addAttribute("fromLocation",fromLocation);

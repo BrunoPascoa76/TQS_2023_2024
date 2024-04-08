@@ -35,6 +35,9 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class ControllerTests {
@@ -252,5 +255,71 @@ class ControllerTests {
 				.then()
 				.statusCode(400);
 
+	}
+
+	//web Controller tests:
+	@Test
+	@Order(3)
+	void checkHomeLoggedIn() throws Exception{
+		User user = new User("Bruno", "password");
+		when(authService.getFromToken(token)).thenReturn(Optional.of(user));
+		mock.perform(get("/").header("token", token))
+			.andExpect(status().isOk())
+			.andExpect(model().attribute("username",equalTo("Bruno")))
+			.andExpect(model().attribute("locations",hasSize(3)))
+			.andExpect(content().contentType("text/html;charset=UTF-8"));
+	}
+
+	@Test
+	@Order(3)
+	void checkHomeNotLoggedIn() throws Exception{
+		mock.perform(get("/"))
+			.andExpect(status().isOk())
+			.andExpect(model().attribute("username",is(nullValue())))
+			.andExpect(model().attribute("locations",hasSize(3)))
+			.andExpect(content().contentType("text/html;charset=UTF-8"));
+	}
+
+	@Test
+	@Order(3)
+	void checkResultsLoggedIn() throws Exception{
+		User user = new User("Bruno", "password");
+		when(authService.getFromToken(token)).thenReturn(Optional.of(user));
+		when(bookingService.getTrips(new Date(1712361600000L), "Porto", "Aveiro")).thenReturn(Arrays.asList(trips.get(0),trips.get(1)));
+		mock.perform(get("/results?tripDate=1712361600000&fromLocation=Porto&toLocation=Aveiro").header("token", token))
+			.andExpect(status().isOk())
+			.andExpect(model().attribute("username",equalTo("Bruno")))
+			.andExpect(model().attribute("fromLocation", equalTo("Porto")))
+			.andExpect(model().attribute("toLocation", equalTo("Aveiro")))
+			.andExpect(model().attribute("trips", hasSize(2)))
+			.andExpect(content().contentType("text/html;charset=UTF-8"));
+	}
+
+	@Test
+	@Order(3)
+	void checkResultsNotLoggedIn() throws Exception{
+		when(bookingService.getTrips(new Date(1712361600000L), "Porto", "Aveiro")).thenReturn(Arrays.asList(trips.get(0),trips.get(1)));
+		mock.perform(get("/results?tripDate=1712361600000&fromLocation=Porto&toLocation=Aveiro"))
+			.andExpect(status().isOk())
+			.andExpect(model().attribute("username",is(nullValue())))
+			.andExpect(model().attribute("fromLocation", equalTo("Porto")))
+			.andExpect(model().attribute("toLocation", equalTo("Aveiro")))
+			.andExpect(model().attribute("trips", hasSize(2)))
+			.andExpect(content().contentType("text/html;charset=UTF-8"));
+	}
+	@Test
+	@Order(3)
+	void checkLogin() throws Exception{
+		mock.perform(get("/login"))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType("text/html;charset=UTF-8"));
+	}
+
+	@Test
+	@Order(3)
+	void checkRegister() throws Exception{
+		mock.perform(get("/login"))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType("text/html;charset=UTF-8"));
 	}
 }
