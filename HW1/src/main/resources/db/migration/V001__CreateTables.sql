@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 create table IF NOT EXISTS trip (
-    id BIGSERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     bus_number int,
     trip_date DATE,
     from_time TIME,
@@ -15,7 +15,9 @@ create table IF NOT EXISTS trip (
     num_seats INT DEFAULT(45)
 );
 
-create table reservation (
-    id BIGSERIAL PRIMARY KEY,
+create table IF NOT EXISTS reservation (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(256),
-    trip BIGSERIAL,seat INT);
+    trip BIGINT,
+    seat INT
+);
