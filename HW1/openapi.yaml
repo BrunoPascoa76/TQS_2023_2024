@@ -1,0 +1,184 @@
+openapi: 3.0.3
+info:
+  title: TicketBus Developer API
+  description: |-
+    This is the developers API description for TicketBus, a simple bus trip reservation 
+
+  contact:
+    email: brunopascoa03@ua.pt
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080/api/
+tags:
+  - name: authentication
+    description: Endpoints for login/register
+  - name: booking
+    description: Endpoints to search/book trips
+    externalDocs:
+      description: Find out more about our store
+      url: http://swagger.io
+paths:
+  /login:
+    post:
+      tags:
+        - authentication
+      description: Login to the application using username and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: the authentication token for the user
+        '401':
+          description: username and/or password incorrect
+  /register:
+    post:
+      tags:
+        - authentication
+      description: Register to the application using username and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: register successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: the authentication token for the user
+        '409':
+          description: username already exists
+          
+  /trips/list:
+    get:
+      tags:
+        - booking
+      description: list all trips
+      responses:
+        '200':
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/trip'
+  /trips:
+    get:
+      tags:
+        - booking
+      description: search trips using parameters
+      parameters:
+        - name: tripDate
+          in: query
+          description: trip date (in milliseconds since epoch)
+          schema:
+            type: number
+        - name: fromLocation
+          in: query
+          schema:
+            type: string
+        - name: toLocation
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/trip'
+  /trips/schedule:
+    post:
+      tags:
+        - booking
+      description: schedule a trip
+      parameters:
+        - name: token
+          in: header
+          description: auth token
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                trip:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                seat:
+                  type: integer
+      responses:
+        '201':
+          description: operation completed succesfully
+        '409':
+          description: seat already occupied/wrong credentials
+                
+                    
+                          
+components:
+  schemas:
+    trip:
+      type: object
+      properties:
+        id:
+          type: number
+        busNumber:
+          type: integer
+        tripDate:
+          type: string
+          example: yyyy-MM-dd
+        fromTime:
+          type: string
+          example: hh:mm:ss
+        toTime:
+          type: string
+          example: hh:mm:ss
+        fromLocation:
+          type: string
+        toLocation:
+          type: string
+        numSeats:
+          type: integer
+        occupiedSeats:
+          type: array
+          items:
+            type: integer
+          
+      
