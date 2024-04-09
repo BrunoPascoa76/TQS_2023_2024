@@ -3,6 +3,7 @@ package tqs.homework.services;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import tqs.homework.repositories.UserRepository;
 
 @Service
 public class AuthenticationService {
+
     private UserRepository repo;
 
     @Autowired
